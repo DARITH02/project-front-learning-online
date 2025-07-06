@@ -1,6 +1,6 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import Logo from "../assets/logo/logo-etec.png";
-
+import ThemeToggleButton from "../components/ThemeToggleButton";
 import { useEffect, useState } from "react";
 import {
   Search,
@@ -13,6 +13,7 @@ import {
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
+import axios from "../api/axios.js";
 
 // import {
 //     DropdownMenu,
@@ -22,8 +23,6 @@ import { Badge } from "../components/ui/badge";
 // } from "./ui/dropdown-menu";
 
 export default function Header({ page, data }) {
-  console.log(data);
-
   // const location = useLocation();
   // const param = useParams();
   // console.log(location.pathname);
@@ -40,6 +39,7 @@ export default function Header({ page, data }) {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
+  const [category, setCategory] = useState([]);
 
   useEffect(() => {
     // const handleMouseLeave = () => {
@@ -49,7 +49,33 @@ export default function Header({ page, data }) {
     // return () => {
     //     window.removeEventListener("mouseover", handleMouseLeave);
     // };
+
+    axios
+      .get("view-category")
+      .then((rs) => {
+        // console.log(rs);s
+        setCategory(rs.data.data || []);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
+  console.log(category);
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  useEffect(() => {
+    const root = document.body;
+    if (darkMode) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
 
   const listMunu = [
     {
@@ -61,8 +87,14 @@ export default function Header({ page, data }) {
 
   return (
     <>
-      <header className="w-full bg-white border-b border-gray-200 px-4 py-3 z-50 sticky top-0 ">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <header
+        className={`backdrop-blur-sm border-b border-gray-200 px-4 py-3 z-50 sticky top-0  w-full shadow-2xl flex items-center transition-colors duration-300 ${
+          darkMode ? "bg-gray-950/90 text-white" : "bg-white text-black"
+        }`}
+      >
+        {/* // className="w-full shadow-2xl bg-white dark:bg-gray-950/90 */}
+        {/* backdrop-blur-sm border-b border-gray-200 px-4 py-3 z-50 sticky top-0 "> */}
+        <div className="w-7xl mx-auto flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2 flex-shrink-0 overflow-hidden">
             <img className="h-14 w-14" src={Logo} alt="" />
@@ -73,9 +105,7 @@ export default function Header({ page, data }) {
                                 </div>
                             </div>
                         </div> */}
-            <span className="text-xl font-bold text-gray-800 tracking-wide">
-              ETEC
-            </span>
+            <span className="text-xl font-bold tracking-wide">ETEC</span>
           </div>
 
           {/* Search Bar (Hidden on small screens) */}
@@ -96,12 +126,12 @@ export default function Header({ page, data }) {
           <nav className="hidden lg:flex items-center gap-8">
             <Link
               to="/"
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+              className=" hover:text-blue-600 font-medium transition-colors"
             >
               Home
             </Link>
             {/* <div className="group relative z-30 ">
-                            <span className="block py-3.5 text-gray-700 z-20 hover:text-blue-600 font-medium transition-colors cursor-pointer ">
+                            <span className="block py-3.5  z-20 hover:text-blue-600 font-medium transition-colors cursor-pointer ">
                                 Categories
                             </span>
                             <ul className="absolute left-0 translate-y-13 scale-y-50  invisible group-hover:scale-y-100 group-hover:visible top-0 py-2.5 z-10 opacity-0 px-5 rounded-xs group-hover:opacity-100 group-hover:shadow-2xl bg-gray-50 w-52 transition-all duration-300 ease-out ">
@@ -123,7 +153,7 @@ export default function Header({ page, data }) {
 
             <div className="group relative z-30">
               {/* Trigger */}
-              <span className="block py-3.5 text-gray-700 z-20 hover:text-blue-600 font-medium transition-colors cursor-pointer">
+              <span className="block py-3.5  z-20 hover:text-blue-600 font-medium transition-colors cursor-pointer">
                 Categories
               </span>
 
@@ -135,29 +165,35 @@ export default function Header({ page, data }) {
                                 origin-top transition-all duration-300 ease-out"
               >
                 {/* Main link */}
-                {listMunu.map((el, i) => (
-                  <ul
-                    className="block w-fit"
-                    // className="relative block  text-gray-800 font-medium
-                    //        hover:text-blue-700 hover:underline decoration-blue-700 hover:shadow-2xl
-                    //        transition-all duration-300 ease-out"
-                  >
-                    <li className="w-full block">
-                      {el.lable}
-                      <div>
-                        {el.sumList.map((el, ind) => (
-                          <ul>
-                            <li className="text-blue-500">
-                              <Link to={`/category/${el}/${ind}`}>{el}</Link>
-                            </li>
-                          </ul>
-                        ))}
-                      </div>
-                    </li>
-                  </ul>
-                ))}
+                {Array.isArray(category) &&
+                  category.map((el) => (
+                    <ul
+                      className="block w-fit"
+                      // className="relative block  text-gray-800 font-medium
+                      //        hover:text-blue-700 hover:underline decoration-blue-700 hover:shadow-2xl
+                      //        transition-all duration-300 ease-out"
+                    >
+                      <li className="text-blue-500">
+                        <Link>{el.title}</Link>
+                      </li>
+                    </ul>
+                  ))}
               </ul>
             </div>
+
+            {/* <li className="w-full block">
+                        {el.lable}
+                        <div>
+                          {el.sumList.map((el, ind) => (
+                            <ul>
+                              <li className="text-blue-500">
+                                {/* <Link to={`/category/${el}/${ind}`}>{el}</Link> */}
+            {/* </li> */}
+            {/* </ul> */}
+            {/* ))} */}
+            {/* </div> */}
+            {/* </li>  */}
+
             {/* <a
                                             href="#"
                                             className=" relative block w-full text-gray-800 font-medium
@@ -197,7 +233,7 @@ export default function Header({ page, data }) {
 
             <Link
               to="/about"
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+              className=" hover:text-blue-600 font-medium transition-colors"
             >
               About Us
             </Link>
@@ -205,17 +241,18 @@ export default function Header({ page, data }) {
 
           {/* Right Side Controls */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
-              className="hidden sm:flex text-gray-600 hover:text-gray-800"
             >
-              <Sun className="w-5 h-5" />
-            </Button>
+              <Sun className="w-5 h-5" /> */}
+
+            {/* </Button> */}
+            <ThemeToggleButton darkMode={darkMode} setDarkMode={setDarkMode} />
 
             {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="hidden md:flex text-gray-700 hover:text-gray-800 gap-1">
+                <Button variant="ghost" className="hidden md:flex  hover:text-gray-800 gap-1">
                   English <ChevronDown className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -231,7 +268,7 @@ export default function Header({ page, data }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative text-gray-600 hover:text-gray-800"
+                className="relative hover:text-gray-800"
               >
                 <Heart className="w-5 h-5" />
                 <Badge
@@ -244,7 +281,7 @@ export default function Header({ page, data }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative text-gray-600 hover:text-gray-800"
+                className="relative hover:text-gray-800"
               >
                 <Bell className="w-5 h-5" />
                 <Badge
@@ -264,7 +301,7 @@ export default function Header({ page, data }) {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-gray-600 hover:text-gray-800"
+              className="lg:hidden hover:text-gray-800"
               onClick={toggleMobileMenu}
               aria-label="Toggle mobile menu"
             >
@@ -273,7 +310,6 @@ export default function Header({ page, data }) {
             </Button>
           </div>
         </div>
-
         {/* Mobile Search */}
         <div className="sm:hidden mt-3">
           <div className="relative">
@@ -324,7 +360,7 @@ export default function Header({ page, data }) {
                 <a
                   key={text}
                   href="#"
-                  className="block text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors py-2"
+                  className="block text-lg font-medium  hover:text-blue-600 transition-colors py-2"
                   onClick={closeMobileMenu}
                 >
                   {text}
@@ -336,21 +372,21 @@ export default function Header({ page, data }) {
 
             <div className="p-4 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-gray-700 font-medium">Theme</span>
+                <span className=" font-medium">Theme</span>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-gray-600 hover:text-gray-800"
+                  className=" hover:text-gray-800"
                 >
                   <Sun className="w-5 h-5" />
                 </Button>
               </div>
 
               {/* <div className="flex items-center justify-between">
-                <span className="text-gray-700 font-medium">Language</span>
+                <span className=" font-medium">Language</span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="text-gray-700 hover:text-gray-800 gap-1">
+                    <Button variant="ghost" className=" hover:text-gray-800 gap-1">
                       English <ChevronDown className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -364,12 +400,12 @@ export default function Header({ page, data }) {
               </div> */}
 
               <div className="flex items-center justify-between">
-                <span className="text-gray-700 font-medium">Notifications</span>
+                <span className=" font-medium">Notifications</span>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="relative text-gray-600 hover:text-gray-800"
+                    className="relative hover:text-gray-800"
                   >
                     <Heart className="w-5 h-5" />
                     <Badge
@@ -382,7 +418,7 @@ export default function Header({ page, data }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="relative text-gray-600 hover:text-gray-800"
+                    className="relative hover:text-gray-800"
                   >
                     <Bell className="w-5 h-5" />
                     <Badge

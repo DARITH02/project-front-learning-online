@@ -8,7 +8,7 @@ import LoadingPage from "../components/LoadingPage";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
-import axios from "axios";
+import axios from "../api/axios.js";
 
 import TrustedCompanies from "../components/TrustedCompanies";
 import P1 from "../../public/image-front/image2.JPG";
@@ -174,7 +174,7 @@ export default function HeroSlider() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/")
+      .get(`/course`)
       .then((response) => {
         setCourses(response.data.data);
         console.log(response.data.data);
@@ -183,6 +183,7 @@ export default function HeroSlider() {
       })
       .catch((error) => {
         console.error("Error fetching courses:", error);
+        setLoading(true);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -191,7 +192,7 @@ export default function HeroSlider() {
   if (loading) return <LoadingPage />;
   return (
     <div
-      className="max-w-7xl m-auto"
+      className="max-w-7xl m-auto mt-5"
       data-aos="fade-up"
       data-aos-anchor-placement="top-center"
     >
@@ -301,7 +302,7 @@ export default function HeroSlider() {
       {/* </div> */}
       <div data-aos="fade-up">
         <Cart
-        linkto="view-course"
+          linkto="view-course"
           courses={courses}
           title="🔥 Limited Time Offers"
           showSeeAllButton={false}
