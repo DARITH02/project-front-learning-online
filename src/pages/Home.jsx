@@ -8,7 +8,7 @@ import LoadingPage from "../components/LoadingPage";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
-import axios from "../api/axios.js";
+import axios from "axios";
 
 import TrustedCompanies from "../components/TrustedCompanies";
 import P1 from "../../public/image-front/image2.JPG";
@@ -174,10 +174,11 @@ export default function HeroSlider() {
 
   useEffect(() => {
     axios
-      .get(`/course`)
+      .get("http://127.0.0.1:8000/api/courses")
+
       .then((response) => {
         setCourses(response.data.data);
-        console.log(response.data.data);
+        console.log(response);
 
         // setCourses(response.data.data);
       })

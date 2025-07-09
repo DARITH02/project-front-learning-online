@@ -51,7 +51,7 @@ export default function Header({ page, data }) {
     // };
 
     axios
-      .get("view-category")
+      .get("")
       .then((rs) => {
         // console.log(rs);s
         setCategory(rs.data.data || []);
