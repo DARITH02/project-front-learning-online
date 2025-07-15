@@ -106,7 +106,7 @@ export default function Cart({
               {/* <div className="w-full bg-blue-800">1 </div> */}
               <div className="mb-3">{renderStars(course.rating)}</div>
 
-              <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 leading-tight">
+              <h3 className="text-lg font-semibold mb-3 line-clamp-2 leading-tight">
                 {course.title}
               </h3>
 
@@ -129,7 +129,7 @@ export default function Cart({
                   <User className="w-4 h-4 text-gray-500" />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-gray-900">
+                  <div className="text-sm font-medium">
                     {/* {course.instructor.name} */}
                   </div>
                   <div className="text-xs text-gray-500">

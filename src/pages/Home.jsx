@@ -8,7 +8,7 @@ import LoadingPage from "../components/LoadingPage";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
-import axios from "axios";
+import axios from "../api/axios";
 
 import TrustedCompanies from "../components/TrustedCompanies";
 import P1 from "../../public/image-front/image2.JPG";
@@ -174,11 +174,10 @@ export default function HeroSlider() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/courses")
+      .get("courses")
 
       .then((response) => {
         setCourses(response.data.data);
-        console.log(response);
 
         // setCourses(response.data.data);
       })
@@ -188,6 +187,8 @@ export default function HeroSlider() {
       })
       .finally(() => setLoading(false));
   }, []);
+  console.log(courses);
+
   // console.log(34567);
 
   if (loading) return <LoadingPage />;

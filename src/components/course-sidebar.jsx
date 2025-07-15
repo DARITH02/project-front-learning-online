@@ -1,23 +1,30 @@
-import { Button } from "./ui/button"
-import { Card, CardContent } from "./ui/Card"
-import { Heart, Play, FileText, Clock, Smartphone, Award } from "lucide-react"
+import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/Card";
+import { Heart, Play, FileText, Clock, Smartphone, Award } from "lucide-react";
 
-export function CourseSidebar() {
+export function CourseSidebar({ price }) {
   return (
     <Card className="sticky top-6">
       <CardContent className="p-6 space-y-6">
         {/* Price and Actions */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-3xl font-bold text-green-600">Free</span>
+            <span className="text-3xl font-bold text-green-600">
+              {price ? "$" + price : ""}
+            </span>
             <Button size="icon" variant="ghost">
               <Heart className="h-5 w-5" />
             </Button>
           </div>
 
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Enroll Now</Button>
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            Enroll Now
+          </Button>
 
-          <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent">
+          <Button
+            variant="outline"
+            className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent"
+          >
             Add To Cart
           </Button>
         </div>
@@ -39,21 +46,27 @@ export function CourseSidebar() {
 
             <div className="flex items-center space-x-3">
               <Clock className="h-4 w-4 text-gray-600" />
-              <span className="text-sm text-gray-700">Full lifetime access</span>
+              <span className="text-sm text-gray-700">
+                Full lifetime access
+              </span>
             </div>
 
             <div className="flex items-center space-x-3">
               <Smartphone className="h-4 w-4 text-gray-600" />
-              <span className="text-sm text-gray-700">Access on mobile and TV</span>
+              <span className="text-sm text-gray-700">
+                Access on mobile and TV
+              </span>
             </div>
 
             <div className="flex items-center space-x-3">
               <Award className="h-4 w-4 text-gray-600" />
-              <span className="text-sm text-gray-700">Certificate of completion</span>
+              <span className="text-sm text-gray-700">
+                Certificate of completion
+              </span>
             </div>
           </div>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

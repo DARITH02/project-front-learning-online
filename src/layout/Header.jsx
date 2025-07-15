@@ -9,9 +9,10 @@ import {
   Sun,
   ChevronDown,
   AlignJustify,
+  LogOut,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
+import { Input } from "../components/ui/Input.jsx";
 import { Badge } from "../components/ui/badge";
 import axios from "../api/axios.js";
 
@@ -51,16 +52,14 @@ export default function Header({ page, data }) {
     // };
 
     axios
-      .get("")
+      .get("get-category")
       .then((rs) => {
-        // console.log(rs);s
         setCategory(rs.data.data || []);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
-  console.log(category);
 
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
@@ -174,7 +173,7 @@ export default function Header({ page, data }) {
                       //        transition-all duration-300 ease-out"
                     >
                       <li className="text-blue-500">
-                        <Link>{el.title}</Link>
+                        <Link to={`/category/${el.id}`}>{el.title}</Link>
                       </li>
                     </ul>
                   ))}
@@ -293,9 +292,14 @@ export default function Header({ page, data }) {
               </Button>
             </div>
 
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-md font-medium text-sm sm:text-base">
-              Sign In
+            <Button className="flex gap-1 text-gray-200 px-2 sm:px-3 py-2 rounded-md font-medium text-sm sm:text-base">
+              <LogOut />
+              Sign up
             </Button>
+
+            {/* <Button className=" text-white px-4 sm:px-6 py-2 rounded-md font-medium text-sm sm:text-base">
+              
+            </Button> */}
 
             {/* Mobile Toggle */}
             <Button
