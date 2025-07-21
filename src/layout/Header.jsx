@@ -15,27 +15,34 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/Input.jsx";
 import { Badge } from "../components/ui/badge";
 import axios from "../api/axios.js";
-
-// import {
-//     DropdownMenu,
-//     DropdownMenuContent,
-//     DropdownMenuItem,
-//     DropdownMenuTrigger,
-// } from "./ui/dropdown-menu";
+import { useModal } from "../components/context/ModalContext.jsx";
+import { useAuth } from "../components/context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function Header({ page, data }) {
-  // const location = useLocation();
-  // const param = useParams();
-  // console.log(location.pathname);
-  // console.log(param);
+  const { openRegister } = useModal();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isRegistered, setIsRegistered, logout } = useAuth();
+
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
   const [isHover, SetIsHover] = useState(null);
+
+  const handleClick = async () => {
+    if (isRegistered) {
+      await logout();
+      navigate("/");
+      setIsRegistered(false); // Logout
+    } else {
+      navigate("/rigistration");
+      openRegister(); // Open modal
+    }
+  };
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -43,14 +50,6 @@ export default function Header({ page, data }) {
   const [category, setCategory] = useState([]);
 
   useEffect(() => {
-    // const handleMouseLeave = () => {
-    //     SetIsHover(false);
-    // };
-    // window.addEventListener("mouseleave", handleMouseLeave);
-    // return () => {
-    //     window.removeEventListener("mouseover", handleMouseLeave);
-    // };
-
     axios
       .get("get-category")
       .then((rs) => {
@@ -76,13 +75,10 @@ export default function Header({ page, data }) {
     }
   }, [darkMode]);
 
-  const listMunu = [
-    {
-      lable: "Software development",
-      sumList: ["Web Design", "Web Back-end", "CPP"],
-    },
-    { lable: "Network", sumList: ["A", "b", "C"] },
-  ];
+  const handleLogout = async () => {
+    // Log out via API and clear state
+    navigate("/"); // Redirect to login page
+  };
 
   return (
     <>
@@ -229,6 +225,12 @@ export default function Header({ page, data }) {
                                                 </li>
                                             ))}
                                             </ul> */}
+            <Link
+              to={"/my-courses"}
+              className=" hover:text-blue-600 font-medium transition-colors"
+            >
+              My Courses
+            </Link>
 
             <Link
               to="/about"
@@ -239,67 +241,15 @@ export default function Header({ page, data }) {
           </nav>
 
           {/* Right Side Controls */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* <Button
-              variant="ghost"
-              size="icon"
-            >
-              <Sun className="w-5 h-5" /> */}
-
-            {/* </Button> */}
+          <div className="flex items-center gap-5 sm:gap-5">
             <ThemeToggleButton darkMode={darkMode} setDarkMode={setDarkMode} />
 
-            {/* <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="hidden md:flex  hover:text-gray-800 gap-1">
-                  English <ChevronDown className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>English</DropdownMenuItem>
-                <DropdownMenuItem>Spanish</DropdownMenuItem>
-                <DropdownMenuItem>French</DropdownMenuItem>
-                <DropdownMenuItem>German</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu> */}
-
-            <div className="hidden sm:flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative hover:text-gray-800"
-              >
-                <Heart className="w-5 h-5" />
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 w-5 h-5 text-xs flex items-center justify-center p-0 min-w-0"
-                >
-                  0
-                </Badge>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative hover:text-gray-800"
-              >
-                <Bell className="w-5 h-5" />
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 w-5 h-5 text-xs flex items-center justify-center p-0 min-w-0"
-                >
-                  0
-                </Badge>
-              </Button>
-            </div>
-
-            <Button className="flex gap-1 text-gray-200 px-2 sm:px-3 py-2 rounded-md font-medium text-sm sm:text-base">
-              <LogOut />
-              Sign up
+            <Button
+              onClick={handleClick}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+            >
+              {isRegistered ? "Logout" : "Sign Up"}
             </Button>
-
-            {/* <Button className=" text-white px-4 sm:px-6 py-2 rounded-md font-medium text-sm sm:text-base">
-              
-            </Button> */}
 
             {/* Mobile Toggle */}
             <Button

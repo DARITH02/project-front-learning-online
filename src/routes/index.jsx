@@ -6,9 +6,21 @@ import CourseView from "../pages/CousreView";
 import Categroy from "../pages/Category";
 import NotFound from "../components/NotFound";
 import Rigistation from "../pages/Rigistation";
+
+import SignInForm from "../pages/SignInForm";
+import MyCoursesPage from "../pages/MyCoursesPage";
+import PrivateRoute from "./PrivateRoute";
 // import NotFound from "@/pages/NotFound";
 
 const router = createBrowserRouter([
+  {
+    path: "/rigistration",
+    element: <Rigistation />,
+  },
+  {
+    path: "/login",
+    element: <SignInForm />,
+  },
   {
     path: "/",
     element: <Layout />,
@@ -24,9 +36,14 @@ const router = createBrowserRouter([
         element: <CourseView />,
       },
       {
-        path: "/rigistration",
-        element: <Rigistation />,
+        path: "/my-courses",
+        element: (
+          <PrivateRoute>
+            <MyCoursesPage />
+          </PrivateRoute>
+        ),
       },
+
       // {
 
       //   children: [{ path: "view-course/:id", element: <CourseView /> }],

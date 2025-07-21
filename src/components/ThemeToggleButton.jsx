@@ -20,7 +20,7 @@ const ThemeToggleButton = ({ darkMode, setDarkMode }) => {
   return (
     <button
       onClick={() => setDarkMode(!darkMode)}
-      className="hidden sm:flex hover:text-gray-800"
+      className="hidden sm:flex hover:text-gray-800 cursor-pointer "
       aria-label="Toggle dark mode"
       title="Toggle dark mode"
       type="button"

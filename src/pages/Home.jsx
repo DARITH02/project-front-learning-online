@@ -8,13 +8,14 @@ import LoadingPage from "../components/LoadingPage";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
-import axios from "../api/axios";
 
 import TrustedCompanies from "../components/TrustedCompanies";
 import P1 from "../../public/image-front/image2.JPG";
 import P2 from "../../public/image-front/image2.JPG";
 import P3 from "../../public/image-front/image3.JPG";
 import P4 from "../../public/image-front/image4.JPG";
+import api from "../api/axios";
+
 
 const slides = [
   {
@@ -173,21 +174,19 @@ export default function HeroSlider() {
   const handleMouseLeave = () => setIsAutoPlaying(true);
 
   useEffect(() => {
-    axios
-      .get("courses")
-
+    setLoading(true); // start loading
+    api
+      .get("/courses")
       .then((response) => {
         setCourses(response.data.data);
-
-        // setCourses(response.data.data);
+        console.log(response);
       })
       .catch((error) => {
         console.error("Error fetching courses:", error);
-        setLoading(true);
       })
       .finally(() => setLoading(false));
   }, []);
-  console.log(courses);
+  // console.log(courses);
 
   // console.log(34567);
 

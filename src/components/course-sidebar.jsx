@@ -2,6 +2,10 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/Card";
 import { Heart, Play, FileText, Clock, Smartphone, Award } from "lucide-react";
 
+const handleContact = () => {
+  window.open("https://t.me/darith_ph80", "_blank");
+};
+
 export function CourseSidebar({ price }) {
   return (
     <Card className="sticky top-6">
@@ -17,15 +21,11 @@ export function CourseSidebar({ price }) {
             </Button>
           </div>
 
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-            Enroll Now
-          </Button>
-
           <Button
-            variant="outline"
-            className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent"
+            onClick={handleContact}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
           >
-            Add To Cart
+            Enroll Now
           </Button>
         </div>
 
