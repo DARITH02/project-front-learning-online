@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../components/ui/dialog";
-import Rigistation from "../pages/Rigistation"; // ✅ import the register form
+import Rigistation from "../pages/Rigistation"; 
 
 const Layout = () => {
   const { isRegisterOpen, closeRegister } = useModal();

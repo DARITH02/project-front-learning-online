@@ -1,9 +1,8 @@
-"use client";
-
 import { use, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/Input";
 import { Label } from "../components/ui/Label";
+import Logo from "../assets/logo/logo-etec.png";
 import {
   Card,
   CardContent,
@@ -76,7 +75,7 @@ export default function AnimatedLoginForm() {
       const respone = await axios.post("/login", formData);
 
       const user = respone.data;
-      console.log(user);
+      console.log("User logged in:", user);
 
       setFormData({ email: "", password: "" });
       login(user);
@@ -128,8 +127,10 @@ export default function AnimatedLoginForm() {
       <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl animate-fade-in">
           <CardHeader className="space-y-1 text-center">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mb-4 animate-pulse">
-              <User className="w-8 h-8 text-white" />
+            <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 animate-pulse">
+              <Link to={"/"}>
+                <img src={Logo} alt="Logo.. " />
+              </Link>
             </div>
             <CardTitle className="text-3xl font-bold text-white">
               Welcome Back

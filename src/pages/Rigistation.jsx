@@ -9,15 +9,19 @@ import { Eye, EyeOff, Mail, User, Lock, UserPlus } from "lucide-react";
 import axios from "../api/axios";
 import { useAuth } from "../components/context/AuthContext";
 import { useModal } from "../components/context/ModalContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "../assets/logo/logo-etec.png";
+
 
 export default function AnimatedRegisterForm() {
-  const { setIsRegistered } = useAuth();
+  const { setIsRegistered, login } = useAuth();
   const { isRegisterOpen, closeRegister } = useModal();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -96,13 +100,22 @@ export default function AnimatedRegisterForm() {
     setIsLoading(true);
 
     try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const response = await axios.post("registration", formData);
-      setIsRegistered(true);
-      closeRegister();
+
       console.log("Registration data:", formData);
 
       if (response.data.success == true) {
         // Handle success
+        setIsRegistered(true);
+        closeRegister();
+        const userData = {
+          ...response.data.user,
+          access_token: response.data.access_token,
+        };
+        login(userData);
+        navigate("/", { replace: true });
       }
     } catch (error) {
       console.error("Registration error:", error);
@@ -151,8 +164,10 @@ export default function AnimatedRegisterForm() {
       <div className="relative z-10 flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-lg backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8 animate-fade-in">
           <div className="text-center mb-8">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mb-4 animate-pulse">
-              <UserPlus className="w-8 h-8 text-white" />
+            <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 animate-pulse">
+              <Link to={"/"}>
+                <img src={Logo} alt="Logo.. " />
+              </Link>
             </div>
             <h2 className="text-3xl font-bold text-white mb-2">
               Create Account
