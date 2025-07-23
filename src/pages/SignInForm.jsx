@@ -3,6 +3,10 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/Input";
 import { Label } from "../components/ui/Label";
 import Logo from "../assets/logo/logo-etec.png";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+
 import {
   Card,
   CardContent,
@@ -12,7 +16,7 @@ import {
 } from "../components/ui/Card";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
-import { Link, replace, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useAuth } from "../components/context/AuthContext";
 
@@ -26,7 +30,7 @@ export default function AnimatedLoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, setIsRegistered } = useAuth();
+  const { login, setIsRegistered, isRegistered } = useAuth();
   const from = location.state?.from?.pathname || "/";
 
   const handleInputChange = (e) => {
@@ -41,6 +45,10 @@ export default function AnimatedLoginForm() {
         [name]: "",
       }));
     }
+  };
+
+  const handleClick = async () => {
+    navigate("/");
   };
 
   const validateForm = () => {
@@ -61,21 +69,14 @@ export default function AnimatedLoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // if (!validateForm()) {
-    //   return;
-    // }
-
     setIsLoading(true);
-
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("Login attempt:", formData);
 
       const respone = await axios.post("/login", formData);
+      toast.success(`🎉 Welcome back , ${respone.data.user.name}!`);
 
       const user = respone.data;
-      console.log("User logged in:", user);
 
       setFormData({ email: "", password: "" });
       login(user);
@@ -83,10 +84,57 @@ export default function AnimatedLoginForm() {
 
       navigate(from, { replace: true });
     } catch (error) {
+      toast.error(`Login failed. Please try again.`);
+
       setErrors({ submit: "Login failed. Please try again." });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleLoginSuccess = async (credentialResponse) => {
+    try {
+      // credentialResponse.credential is a JWT token you can decode to get user info
+      setIsLoading(true);
+      const decoded = jwtDecode(credentialResponse.credential);
+
+      const googleUserData = {
+        name: decoded.name,
+        email: decoded.email,
+        google_id: decoded.sub,
+        avatar: decoded.picture,
+      };
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Now send googleUserData to your backend API
+      const response = await axios.post(
+        "http://localhost:8000/api/google-login",
+        googleUserData
+      );
+      if (response.status === 200) {
+        toast.success(`🎉 Welcome back , ${response.data.user.name}!`);
+        const user = response.data;
+
+        setFormData({ email: "", password: "" });
+        login(user);
+        setIsRegistered(true);
+
+        navigate(from, { replace: true });
+      }
+    } catch (error) {
+      if (error.response?.status === 404) {
+        toast.error(`User not register,${error.message}!`);
+      } else {
+        console.error("Login error:", error);
+        alert("An error occurred during login.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLoginError = () => {
+    alert("Google login failed");
   };
 
   return (
@@ -128,9 +176,9 @@ export default function AnimatedLoginForm() {
         <Card className="w-full max-w-md backdrop-blur-lg bg-white/10 border-white/20 shadow-2xl animate-fade-in">
           <CardHeader className="space-y-1 text-center">
             <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 animate-pulse">
-              <Link to={"/"}>
+              <button onClick={handleClick} className="cursor-pointer">
                 <img src={Logo} alt="Logo.. " />
-              </Link>
+              </button>
             </div>
             <CardTitle className="text-3xl font-bold text-white">
               Welcome Back
@@ -254,15 +302,33 @@ export default function AnimatedLoginForm() {
                 )}
               </Button>
 
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="bg-transparent hover:bg-transparent w-full flex "
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  <GoogleLogin
+                    onSuccess={handleLoginSuccess}
+                    onError={handleLoginError}
+                  />
+                )}
+              </Button>
+
               <div className="text-center">
                 <p className="text-sm text-gray-300">
                   {"Don't have an account? "}
-                  <Link
-                    to={"/"}
+                  <button
+                    onClick={handleClick}
                     className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
                   >
                     Create one now
-                  </Link>
+                  </button>
                 </p>
               </div>
             </form>

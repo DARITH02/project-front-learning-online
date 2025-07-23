@@ -18,6 +18,7 @@ import axios from "../api/axios.js";
 import { useModal } from "../components/context/ModalContext.jsx";
 import { useAuth } from "../components/context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Header({ page, data }) {
   const { openRegister } = useModal();
@@ -31,16 +32,15 @@ export default function Header({ page, data }) {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-  const [isHover, SetIsHover] = useState(null);
 
   const handleClick = async () => {
     if (isRegistered) {
       await logout();
       navigate("/");
       setIsRegistered(false); // Logout
+      toast.warn("Logout user!");
     } else {
       navigate("/rigistration");
-      openRegister(); // Open modal
     }
   };
 
@@ -74,11 +74,6 @@ export default function Header({ page, data }) {
       localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
-
-  const handleLogout = async () => {
-    // Log out via API and clear state
-    navigate("/"); // Redirect to login page
-  };
 
   return (
     <>

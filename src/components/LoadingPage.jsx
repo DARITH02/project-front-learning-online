@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react";
 
 export default function LoadingPage() {
   return (
@@ -16,14 +16,22 @@ export default function LoadingPage() {
         {/* Loading text */}
         <div className="space-y-2">
           <h2 className="text-2xl font-semibold text-slate-800">Loading</h2>
-          <p className="text-slate-600">Please wait while we prepare everything for you</p>
+          <p className="text-slate-600">
+            Please wait while we prepare everything for you
+          </p>
         </div>
 
         {/* Animated dots */}
         <div className="flex justify-center space-x-1">
           <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-          <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-          <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+          <div
+            className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"
+            style={{ animationDelay: "0.1s" }}
+          ></div>
+          <div
+            className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
         </div>
 
         {/* Progress bar */}
@@ -41,5 +49,5 @@ export default function LoadingPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

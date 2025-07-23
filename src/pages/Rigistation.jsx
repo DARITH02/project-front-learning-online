@@ -11,7 +11,8 @@ import { useAuth } from "../components/context/AuthContext";
 import { useModal } from "../components/context/ModalContext";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo/logo-etec.png";
-
+import GoogleLoginButton from "../components/context/GoogleLoginButton";
+import { toast } from "react-toastify";
 
 export default function AnimatedRegisterForm() {
   const { setIsRegistered, login } = useAuth();
@@ -98,30 +99,47 @@ export default function AnimatedRegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("🚫 Passwords not matchs");
+      setIsLoading(false);
+    } else {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+        const response = await axios.post("registration", formData);
 
-      const response = await axios.post("registration", formData);
-
-      console.log("Registration data:", formData);
-
-      if (response.data.success == true) {
         // Handle success
+
         setIsRegistered(true);
         closeRegister();
         const userData = {
           ...response.data.user,
           access_token: response.data.access_token,
         };
+        toast.success(
+          `🎉 Welcome ,${formData.first_name}-${formData.last_name}`
+        );
+
         login(userData);
         navigate("/", { replace: true });
+      } catch (error) {
+        console.log(error);
+
+        if (error.response?.status === 404) {
+          toast.error(error.response.data.message);
+        } else if (error.response?.status === 422) {
+          toast.error("🚫 The email has already been taken."); // e.g. "User not registered"
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Registration error:", error);
-    } finally {
-      setIsLoading(false);
     }
+  };
+  const handleClick = async () => {
+    navigate("/");
+  };
+  const handleLoginError = () => {
+    alert("Google login failed");
   };
 
   return (
@@ -165,9 +183,9 @@ export default function AnimatedRegisterForm() {
         <div className="w-full max-w-lg backdrop-blur-lg bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-8 animate-fade-in">
           <div className="text-center mb-8">
             <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 animate-pulse">
-              <Link to={"/"}>
+              <button onClick={handleClick} className="cursor-pointer">
                 <img src={Logo} alt="Logo.. " />
-              </Link>
+              </button>
             </div>
             <h2 className="text-3xl font-bold text-white mb-2">
               Create Account
@@ -412,6 +430,20 @@ export default function AnimatedRegisterForm() {
                 Sign In
               </Link>
             </div>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-transparent hover:bg-transparent w-full flex "
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Creating Account...
+                </div>
+              ) : (
+                <GoogleLoginButton onError={handleLoginError} />
+              )}
+            </Button>
           </form>
         </div>
       </div>
