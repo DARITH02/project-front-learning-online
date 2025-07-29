@@ -33,14 +33,14 @@ export function VideoPlayer() {
         </div> */}
 
         <video
+          autoPlay
+          
           id="videoPlayer"
           className="w-full"
-          src={`http://127.0.0.1:8000/storage/videos_intro/untitled.mp4`} // replace with your video path
-controls
+          src={`http://127.0.0.1:8000/storage/videos_intro/intro.mp4`} // replace with your video path
+          controls
         />
       </div>
-
-    
     </div>
   );
 }

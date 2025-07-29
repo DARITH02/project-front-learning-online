@@ -80,7 +80,10 @@ export default function AnimatedLoginForm() {
 
       setFormData({ email: "", password: "" });
       login(user);
+      console.log(use);
+      
       setIsRegistered(true);
+      localStorage.setItem("token", respone.data.token);
 
       navigate(from, { replace: true });
     } catch (error) {
@@ -114,6 +117,7 @@ export default function AnimatedLoginForm() {
       if (response.status === 200) {
         toast.success(`🎉 Welcome back , ${response.data.user.name}!`);
         const user = response.data;
+        localStorage.setItem("token", response.data.token);
 
         setFormData({ email: "", password: "" });
         login(user);

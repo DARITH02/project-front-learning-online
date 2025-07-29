@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 <ToastContainer />;
 
 const clientId =
-  "125020314907-34dsoh0ta5ekmaevlcshes478pa1uu0s.apps.googleusercontent.com";
+  "998065850866-jod29kupnb15sedr2q7elvkfdeos1vi7.apps.googleusercontent.com";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

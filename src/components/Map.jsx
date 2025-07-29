@@ -17,7 +17,7 @@ function Map() {
   const [showMap, setShowMap] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyAOQwv1SLokHNXZLgLc-i9n5lwHoCYMvX0", // Replace with your API key
+    googleMapsApiKey: "AIzaSyAQHaRi2-CivzkTqjpF2MbIhaDS67Vqbro",
   });
 
   // const handleShowMap = () => {

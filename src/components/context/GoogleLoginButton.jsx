@@ -19,7 +19,7 @@ function GoogleLoginButton() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/google-registraion",
+        "http://localhost:8000/api/google-registration",
         data
       );
 

@@ -1,6 +1,7 @@
 // src/context/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+
 // 1. Create context
 const AuthContext = createContext();
 
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }) => {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       setIsRegistered(true);
+      
     }
   }, []);
 

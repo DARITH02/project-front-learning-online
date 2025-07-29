@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/Input";
 import {
@@ -163,6 +163,35 @@ export default function MyCoursesPage() {
   const totalProgress = Math.round(
     courses.reduce((sum, course) => sum + course.progress, 0) / courses.length
   );
+
+  const [, Courses, setCourses] = useState([]);
+  const token = localStorage.getItem("token");
+  console.log(token);
+  
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/purchases", {
+          method: "GET",
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+
+        if (!res.ok) throw new Error("Unauthorized");
+
+        const data = await res.json();
+        console.log("Courses:", data);
+        setCourses(data); // Assuming setCourses is your useState setter
+      } catch (err) {
+        console.error("Error fetching courses:", err.message);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const CourseCard = ({ course }) => (
     <Card className="group hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">

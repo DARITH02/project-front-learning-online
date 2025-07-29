@@ -20,29 +20,29 @@ import api from "../api/axios";
 const slides = [
   {
     id: 1,
-    title: "Make yourself one",
-    subtitle: "Comfort & Professional",
-    description:
-      "comprehensive educational experiences that develop and enhance skill sets that can be applied to diverse job profiles.",
-    buttonText: "Find your desired Course",
+    // title: "Make yourself one",
+    // subtitle: "Comfort & Professional",
+    // description:
+    //   "comprehensive educational experiences that develop and enhance skill sets that can be applied to diverse job profiles.",
+    // buttonText: "Find your desired Course",
     backgroundImage: P1,
   },
   {
     id: 2,
-    title: "Unlock your potential",
-    subtitle: "Learn & Grow",
-    description:
-      "Join thousands of students who have transformed their careers through our expert-led courses and practical learning approach.",
-    buttonText: "Explore Courses",
+    // title: "Unlock your potential",
+    // subtitle: "Learn & Grow",
+    // description:
+    //   "Join thousands of students who have transformed their careers through our expert-led courses and practical learning approach.",
+    // buttonText: "Explore Courses",
     backgroundImage: P2,
   },
   {
     id: 3,
-    title: "Start your journey",
-    subtitle: "Success Awaits",
-    description:
-      "From beginner to expert, our structured learning paths guide you every step of the way to achieve your professional goals.",
-    buttonText: "Get Started Today",
+    // title: "Start your journey",
+    // subtitle: "Success Awaits",
+    // description:
+    //   "From beginner to expert, our structured learning paths guide you every step of the way to achieve your professional goals.",
+    // buttonText: "Get Started Today",
     backgroundImage: P3,
   },
 ];
